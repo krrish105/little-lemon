@@ -1,22 +1,18 @@
 import ReserveTableForm from "../ReserveTableForm";
 import { useReducer } from "react";
-import { fetchAPI, submitAPI } from "../../bookingAPI";
+import { submitAPI } from "../../bookingAPI";
 import { useNavigate } from "react-router";
+import { initialTimes, updateTimes } from "../../bookingFunctions";
 
 const ReserveTable = () => {
 	const navigate = useNavigate();
-	const initialTimes = { availableTimes: fetchAPI(new Date()) };
-
-	const updateTimes = (state, date) => {
-		return {
-			availableTimes: fetchAPI(new Date(date)),
-		};
-	};
 
 	const [availableTimes, dispatch] = useReducer(updateTimes, initialTimes);
 
-	const submitHandler = (formData) => {
-		if (submitAPI(formData)) {
+	const submitHandler = (form) => {
+		form.preventDefault();
+		let tableFormData = new FormData(form.target);
+		if (submitAPI(tableFormData)) {
 			navigate("/table-reserved");
 		}
 	};
@@ -26,7 +22,7 @@ const ReserveTable = () => {
 			<div className='container reserve_table'>
 				<h1 className='sub-title'>Reserve A Table</h1>
 				<ReserveTableForm
-					availableTimes={availableTimes.availableTimes}
+					availableTimes={availableTimes?.availableTimes}
 					dispatch={dispatch}
 					submitHandler={submitHandler}
 				/>

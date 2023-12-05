@@ -14,6 +14,10 @@
 	box-sizing: border-box;
 }
 
+body {
+	min-width: 320px;
+}
+
 img {
 	max-width: 100%;
 	height: auto;
@@ -29,7 +33,12 @@ a {
 button {
 	cursor: pointer;
 }
+button:disabled {
+	cursor: not-allowed;
+	opacity: 0.7;
+}
 
+/* Typography */
 .title {
 	font-weight: 500;
 	font-size: 64px;
@@ -92,6 +101,7 @@ button {
 	padding-inline: 1rem;
 }
 
+/* Navigation */
 nav {
 	background-color: #edefee;
 	padding: 16px 0;
@@ -101,12 +111,39 @@ nav {
 	justify-content: space-between;
 	align-items: center;
 }
+.nav_mobile-container {
+	position: absolute;
+	transform: translateX(-1000px);
+	background: white;
+	top: 80px;
+	padding: 12px 0;
+	transition: transform 0.2s ease-in-out;
+}
+.nav_mobile-container.active {
+	transform: translateX(0);
+	left: 0;
+	right: 0;
+	z-index: 1;
+}
 .nav_menu {
 	display: flex;
 	align-items: center;
+	flex-direction: column;
 	gap: 40px;
 }
+.hamburger {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	border: 0;
+}
+.hamburger span {
+	width: 32px;
+	height: 2px;
+	background-color: var(--secondary-4);
+}
 
+/* Hero */
 .hero-container {
 	background-color: var(--primary-1);
 }
@@ -118,14 +155,7 @@ nav {
 	height: 400px;
 }
 .hero-section div:last-child {
-	position: absolute;
-	top: 60px;
-	right: 0;
-}
-.hero-section div:last-child img {
-	width: 500px;
-	height: 450px;
-	object-fit: cover;
+	display: none;
 }
 .hero_section-subcontainer {
 	display: flex;
@@ -143,9 +173,10 @@ nav {
 	color: var(--primary-2);
 }
 
+/* Specials & Testimonials */
 .specials-container,
 .testimonials-container {
-	margin-top: 180px;
+	margin-top: 64px;
 	display: flex;
 	flex-direction: column;
 	gap: 48px;
@@ -154,15 +185,19 @@ nav {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	flex-wrap: wrap;
+	gap: 32px;
 }
 .specials-content,
 .testimonials-content {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, 348px);
+	place-content: center;
 	gap: 32px;
 }
 
 .specials_card {
+	width: 100%;
 	background-color: var(--secondary-3);
 }
 .specials_card .price {
@@ -201,7 +236,7 @@ nav {
 }
 .testimonials-content {
 	display: grid;
-	grid-template-columns: repeat(4, auto);
+	grid-template-columns: repeat(auto-fit, 252px);
 }
 .testimonials_card {
 	display: flex;
@@ -262,4 +297,74 @@ form button[type="submit"] {
 }
 .reserve_table h1 {
 	text-align: center;
+}
+
+footer,
+footer nav {
+	background-color: var(--secondary-3);
+}
+footer > div {
+	padding-block: 24px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	flex-wrap: wrap;
+	gap: 32px;
+}
+footer > div > ul {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+footer > div > ul li {
+	display: flex;
+	gap: 16px;
+}
+footer > div > ul span:first-child {
+	font-weight: 600;
+}
+footer nav ul {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+.footer_row {
+	display: flex;
+	gap: 40px;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+@media (min-width: 980px) {
+	.nav_mobile-container {
+		display: block;
+		position: static;
+		transform: none;
+		background-color: transparent;
+	}
+	.nav_menu {
+		flex-direction: row;
+	}
+	.hamburger {
+		display: none;
+	}
+
+	.hero-section div:last-child {
+		display: block;
+		position: absolute;
+		top: 60px;
+		right: 0;
+	}
+	.hero-section div:last-child img {
+		width: 500px;
+		height: 450px;
+		object-fit: cover;
+	}
+	.specials-container {
+		margin-top: 180px;
+	}
+
+	footer nav ul {
+		flex-direction: row;
+	}
 }

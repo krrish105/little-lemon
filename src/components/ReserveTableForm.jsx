@@ -1,36 +1,76 @@
 import { useState } from "react";
 
 const ReserveTableForm = ({ availableTimes, dispatch, submitHandler }) => {
-	const [name, setName] = useState();
-	const [date, setDate] = useState();
-	const [time, setTime] = useState();
-	const [numberOfGuests, setNumberOfGuests] = useState();
-	const [occasion, setOccasion] = useState();
+	const [formData, setFormData] = useState({
+		name: "",
+		date: "",
+		time: "",
+		numberOfGuests: 1,
+		occasion: "",
+	});
+	const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-	function onChangeForDate(e) {
-		setDate(e.target.value);
-		dispatch(e.target.value);
-	}
+	const handleChange = (event) => {
+		setFormData((prev) => ({
+			...prev,
+			[event.target.name]: event.target.value,
+		}));
+		if (event.target.name === "date") {
+			dispatch(event.target.value);
+		}
+	};
+
+	const submitButtonStateChange = () => {
+		if (
+			!formData.name ||
+			!formData.date ||
+			!formData.time ||
+			!formData.occasion
+		) {
+			setIsButtonDisabled(true);
+		} else {
+			setIsButtonDisabled(false);
+		}
+	};
 
 	return (
-		<form>
+		<form onSubmit={(e) => submitHandler(e)}>
 			<div className='input_container'>
 				<label htmlFor='res-name'>Name</label>
 				<input
 					type='text'
 					id='res-name'
-					onChange={(e) => setName(e.target.value)}
+					name='name'
+					defaultValue={formData.name}
+					onChange={handleChange}
+					onBlur={submitButtonStateChange}
+					required
 				/>
 			</div>
 			<div className='input_container'>
 				<label htmlFor='res-date'>Choose date</label>
-				<input type='date' id='res-date' onChange={(e) => onChangeForDate(e)} />
+				<input
+					type='date'
+					id='res-date'
+					name='date'
+					required
+					defaultValue={formData.date}
+					onChange={handleChange}
+					onBlur={submitButtonStateChange}
+				/>
 			</div>
 			<div className='input_container'>
 				<label htmlFor='res-time'>Choose time</label>
-				<select id='res-time' onChange={(e) => setTime(e.target.value)}>
+				<select
+					id='res-time'
+					onChange={handleChange}
+					onBlur={submitButtonStateChange}
+					name='time'
+					defaultValue={formData.time}
+					required
+				>
 					{availableTimes?.map((el, i) => (
-						<option key={el} selected={el === time ? true : false}>
+						<option key={el} value={el}>
 							{el}
 						</option>
 					))}
@@ -44,21 +84,37 @@ const ReserveTableForm = ({ availableTimes, dispatch, submitHandler }) => {
 					min='1'
 					max='10'
 					id='guests'
-					onChange={(e) => setNumberOfGuests(e.target.value)}
+					name='numberOfGuests'
+					required
+					defaultValue={formData.numberOfGuests}
+					onChange={handleChange}
+					onBlur={submitButtonStateChange}
 				/>
 			</div>
 			<div className='input_container'>
 				<label htmlFor='occasion'>Occasion</label>
-				<select id='occasion' onChange={(e) => setOccasion(e.target.value)}>
+				<select
+					id='occasion'
+					required
+					name='occasion'
+					defaultValue={formData.occasion}
+					onChange={handleChange}
+					onBlur={submitButtonStateChange}
+				>
 					<option>Birthday</option>
 					<option>Engagement</option>
 					<option>Anniversary</option>
 				</select>
 			</div>
-
-			<button className='primary_button' type='submit' onClick={submitHandler}>
-				Make Your reservation
-			</button>
+			{isButtonDisabled ? (
+				<button className='primary_button' type='submit' disabled>
+					Make Your reservation
+				</button>
+			) : (
+				<button className='primary_button' type='submit'>
+					Make Your reservation
+				</button>
+			)}
 		</form>
 	);
 };
